@@ -6,7 +6,7 @@ import discord
 from discord.ext import commands
 from discord import Intents
 
-token = "MTE4ODM4ODExMjk4OTE3NTg2OQ.GHkNTA.H7_eVxzP24TqlYRCrGJ6iL6_nhmQVYofskM-x8"
+token = "token"
 intents = Intents.default()
 intents.message_content = True
 #client = discord.Client(intents = intents)
