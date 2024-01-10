@@ -20,7 +20,7 @@ db = mysql.connector.connect(
 mycursor = db.cursor(buffered=True)
 #mycursor.execute("SHOW DATABASES")
 
-token = "MTE4ODM4ODExMjk4OTE3NTg2OQ.GrZaTd.mLr_4MFMRoCWJ3FJmZxzFwdzpzeD96zbEqAbDI"
+token = "token"
 intents = Intents.default()
 intents.message_content = True
 #client = discord.Client(intents = intents)
