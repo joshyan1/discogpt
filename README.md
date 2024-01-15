@@ -1,2 +1,2 @@
 # discogpt
-AI powered Discord bot using Ollama AI
+AI powered Discord bot using Ollama
