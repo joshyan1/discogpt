@@ -21,7 +21,6 @@ mycursor = db.cursor(buffered=True)
 #mycursor.execute("SHOW DATABASES")
 
 token = "token"
-intents = Intents.default()
 intents.message_content = True
 #client = discord.Client(intents = intents)
 bot = commands.Bot(command_prefix='!', intents = intents)
@@ -80,7 +79,13 @@ async def model(ctx):
 
 @bot.command()
 async def deleteconvo(ctx, convo):
-    mycursor.execute(f"DROP TABLE IF EXISTS {convo}")
+    cmd = """DROP TABLE IF EXISTS convo%s"""
+    val = 0
+    try:
+        val = int(convo)
+        mycursor.execute(cmd, (int(convo),))
+    except:
+        await ctx.channel.send("Invalid conversation")
 
 @bot.command
 async def convos(ctx):
@@ -100,27 +105,36 @@ async def ctx(ctx):
 
 @bot.command()
 async def table(ctx, num):
-    mycursor.execute(f"SELECT ctx FROM {num}")
-    myresult = mycursor.fetchall()
-    for x in myresult:
-        print(x)
+    cmd = "SELECT ctx FROM convo%s"
+    try:
+        val = int(num)
+        mycursor.execute(cmd, (val,))
+        myresult = mycursor.fetchall()
+        for x in myresult:
+            print(x)
+    except:
+        print("invalid convo")
 
 @bot.command()
 async def convo(ctx, num):
     await ctx.channel.send("Changing conversations")
-    mycursor.execute(f"SELECT ctx FROM convo{num}")
-    myresult = mycursor.fetchall()
-    counter = 1
-    for x in myresult:
-        if counter == len(myresult):
-            result = x[0].split(",")
-            result[0] = result[0].replace("[", "")
-            result[len(result) - 1] = result[len(result) - 1].replace("]", "")
-            my_dictionary["ctx"] = list(map(int, result))
-        else: 
-            counter = counter + 1
-
-    my_dictionary["counter"] = int(num)
+    cmd = "SELECT ctx FROM convo%s"
+    try:
+        val = int(num)
+        mycursor.execute(cmd, (val, ))
+        myresult = mycursor.fetchall()
+        counter = 1
+        for x in myresult:
+            if counter == len(myresult):
+                result = x[0].split(",")
+                result[0] = result[0].replace("[", "")
+                result[len(result) - 1] = result[len(result) - 1].replace("]", "")
+                my_dictionary["ctx"] = list(map(int, result))
+            else: 
+                counter = counter + 1
+        my_dictionary["counter"] = int(num)
+    except:
+        await ctx.channel.send("Invalid conversation")
 
 @bot.event
 async def on_ready():
@@ -155,7 +169,7 @@ async def on_message(message):
     if bot.user.mentioned_in(message):
         sql = f"INSERT INTO convo{str(my_dictionary['counter'])} (message, ctx) VALUES (%s, %s)"
         #print(message.content)
-        message.content = message.content.replace("<@1188388112989175869>", "")
+        message.content = message.content.replace("<@botuser>", "")
         #print(message.content)
         images = []
         for i in message.attachments:
